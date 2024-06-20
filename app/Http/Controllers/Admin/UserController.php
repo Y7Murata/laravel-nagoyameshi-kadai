@@ -4,21 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
-    //会員一覧ページ　
-    class UserController extends Controller {
-        public function index() {
-            return view('index');
-        }
-    }
-    //検索ボックスに入力されたキーワードが存在する場合は、氏名またはフリガナで部分一致検索を行う
-    DB::table('users')->select('name','kana')->get();
-    $users = User::where("name", "kana")->get();
-
-    //検索ボックスに入力されたキーワード
-     $keyword
-    //取得したデータ（$users）の総数
-     $total
+     //
+     public function index(Request $request) {
+         // 検索ボックスに入力されたキーワードを取得する
+         $keyword = $request->input('keyword');
+ 
+         // キーワードが存在すれば検索を行い、そうでなければ全件取得する
+         if ($keyword) {
+             $users = User::where('name', 'like', "%{$keyword}%")->orWhere('kana', 'like', "%{$keyword}%")->paginate(15);
+         } else {
+             $users = User::paginate(15);
+         }
+ 
+         $total = $users->total();
+ 
+         return view('admin.users.index', compact('users', 'keyword', 'total'));
+     }
+ 
+     public function show(User $user) {
+         return view('admin.users.show', compact('user'));
+     }
 }
