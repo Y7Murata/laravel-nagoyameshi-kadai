@@ -26,7 +26,7 @@ require __DIR__.'/auth.php';
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
+// ここをみて、テスト実行の際、トップページに遷移するようになる
+    Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
+
 });
-
-Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
-
