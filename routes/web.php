@@ -8,6 +8,9 @@ use App\Http\Controllers\UserController;
 //Restaurantコントローラの宣言
 use App\Http\Controllers\Admin\RestaurantController;
 
+//Categorieコントローラの宣言
+use App\Http\Controllers\Admin\CategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +37,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
     // User
     Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
 
-    //　Restaunrantのルーティングを以下に１行でまとめて追加
+    //Restaunrant
     Route::resource('restaurants', Admin\RestaurantController::class);
+
+    //Category
+    Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
 });
