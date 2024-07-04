@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
+use App\Models\User;
 use App\Models\Term;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -27,6 +30,8 @@ class TermTest extends TestCase
      // 未ログインのユーザーは管理者側の利用規約ページにアクセスできない
      public function test_guest_cannot_access_admin_terms_index()
      {
+         $term = Term::factory()->create();
+
          $response = $this->get(route('admin.terms.index'));
  
          $response->assertRedirect(route('admin.login'));
@@ -36,6 +41,8 @@ class TermTest extends TestCase
      public function test_user_cannot_access_admin_terms_index()
      {
          $user = User::factory()->create();
+
+         $term = Term::factory()->create();
  
          $response = $this->actingAs($user)->get(route('admin.terms.index'));
  
@@ -50,6 +57,8 @@ class TermTest extends TestCase
          $admin->password = Hash::make('nagoyameshi');
          $admin->save();
  
+         $term = Term::factory()->create();
+
          $response = $this->actingAs($admin, 'admin')->get(route('admin.terms.index'));
  
          $response->assertStatus(200);
@@ -63,7 +72,7 @@ class TermTest extends TestCase
      {
          $term = Term::factory()->create();
  
-         $response = $this->get(route('admin.terms.edit', $company));
+         $response = $this->get(route('admin.terms.edit', $term));
  
          $response->assertRedirect(route('admin.login'));
      }
@@ -75,7 +84,7 @@ class TermTest extends TestCase
  
          $term = Term::factory()->create();
  
-         $response = $this->actingAs($user)->get(route('admin.terms.edit', $company));
+         $response = $this->actingAs($user)->get(route('admin.terms.edit', $term));
  
          $response->assertRedirect(route('admin.login'));
      }
@@ -90,7 +99,7 @@ class TermTest extends TestCase
  
          $term = Term::factory()->create();
  
-         $response = $this->actingAs($admin, 'admin')->get(route('admin.terms.edit', $company));
+         $response = $this->actingAs($admin, 'admin')->get(route('admin.terms.edit', $term));
  
          $response->assertStatus(200);
      }
@@ -105,11 +114,12 @@ class TermTest extends TestCase
         $old_term = Term::factory()->create();
 
         $new_term_data = [
-          'content' => 'テスト',
+          'content' => 'テスト更新',
         ];
 
         $response = $this->patch(route('admin.terms.update', $old_term), $new_term_data);
 
+        $this->assertDatabaseMissing('terms', $new_term_data);
         $response->assertRedirect(route('admin.login'));
     }
 
@@ -121,11 +131,12 @@ class TermTest extends TestCase
         $old_term = Term::factory()->create(); 
 
         $new_term_data = [
-           'content' => 'テスト',
+           'content' => 'テスト更新',
         ];
 
         $response = $this->actingAs($user)->patch(route('admin.terms.update', $old_term), $new_term_data);
 
+        $this->assertDatabaseMissing('terms', $new_term_data);
         $response->assertRedirect(route('admin.login'));
     }
 
@@ -140,11 +151,12 @@ class TermTest extends TestCase
         $old_term = Term::factory()->create();
 
         $new_term_data = [
-           'content' => 'テスト',
+           'content' => 'テスト更新',
         ];
 
         $response = $this->actingAs($admin, 'admin')->patch(route('admin.terms.update', $old_term), $new_term_data);
 
+        $this->assertDatabaseHas('terms', $new_term_data);
         $response->assertRedirect(route('admin.terms.show', $old_term));
     }
 
