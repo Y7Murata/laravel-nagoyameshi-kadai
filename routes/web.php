@@ -11,6 +11,12 @@ use App\Http\Controllers\Admin\RestaurantController;
 //Categorieコントローラの宣言
 use App\Http\Controllers\Admin\CategoryController;
 
+//Companyコントローラの宣言
+use App\Http\Controllers\Admin\CompanyController;
+
+//Termコントローラの宣言
+use App\Http\Controllers\Admin\TermController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,5 +48,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
 
     //Category
     Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    //Company
+    Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
+
+    //Term
+    Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
 
 });
