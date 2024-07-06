@@ -17,6 +17,10 @@ use App\Http\Controllers\Admin\CompanyController;
 //Termコントローラの宣言
 use App\Http\Controllers\Admin\TermController;
 
+//Homeコントローラの宣言
+use App\Http\Controllers\HomeController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,10 +32,10 @@ use App\Http\Controllers\Admin\TermController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+  //Home
+  Route::group(['middleware' => 'guest:admin'], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 });
-
 
 require __DIR__.'/auth.php';
 
