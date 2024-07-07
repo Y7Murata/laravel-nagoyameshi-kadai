@@ -13,40 +13,36 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-      * Display the login view.
-      */
-      public function create(): View
-      {
-          return view('admin.auth.login');
-      }
-  
-      /**
-       * Handle an incoming authentication request.
-       */
-      public function store(LoginRequest $request): RedirectResponse
-      {
-          $request->authenticate();
-  
-          $request->session()->regenerate();
-  
-          return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
+     * Display the login view.
+     */
+    public function create(): View
+    {
+        return view('auth.login');
+    }
 
-          return redirect()->route('views.index')->with('flash_message', 'ログインしました。');
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
 
-      }
-  
-      /**
-       * Destroy an authenticated session.
-       */
-      public function destroy(Request $request): RedirectResponse
-      {
-          Auth::guard('admin')->logout();
-  
-          $request->session()->invalidate();
-  
-          $request->session()->regenerateToken();
-  
-          return redirect()->route('views.index')->with('flash_message', 'ログアウトしました。');
+        $request->session()->regenerate();
 
-      }
+        return redirect()->intended(RouteServiceProvider::HOME)->with('flash_message', 'ログインしました。');
+    }
+
+    /**
+     * Destroy an authenticated session.
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('flash_message', 'ログアウトしました。');
+    }
 }
