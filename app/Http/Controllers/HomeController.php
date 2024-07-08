@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Http;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Restaurant;
 use App\Models\Category;
 
 class HomeController extends Controller
