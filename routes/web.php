@@ -20,8 +20,6 @@ use App\Http\Controllers\Admin\TermController;
 //Homeコントローラの宣言
 use App\Http\Controllers\HomeController;
 
-//会員側のUserコントローラの宣言
-use App\Http\Controllers\UserController;
 
 
 /*
