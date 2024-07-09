@@ -36,6 +36,10 @@ use App\Http\Controllers\HomeController;
   //Home
   Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+  //User
+  Route::group(['middleware' => ['auth', 'verified']], function () {
+              Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+    });
 });
 
 require __DIR__.'/auth.php';
