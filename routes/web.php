@@ -20,6 +20,9 @@ use App\Http\Controllers\Admin\TermController;
 //Homeコントローラの宣言
 use App\Http\Controllers\HomeController;
 
+//会員側のUserコントローラの宣言
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +38,10 @@ use App\Http\Controllers\HomeController;
   //Home
   Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+  //User
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+              Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+      });
 });
 
 require __DIR__.'/auth.php';
