@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\UserController;
 
 //Restaurantコントローラの宣言
-use App\Http\Controllers\Admin\RestaurantController;
+/*use App\Http\Controllers\Admin\RestaurantController;*/
 
 //Categorieコントローラの宣言
 use App\Http\Controllers\Admin\CategoryController;
@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\TermController;
 //Homeコントローラの宣言
 use App\Http\Controllers\HomeController;
 
+//Restaurantコントローラの宣言
+use App\Http\Controllers\RestaurantController;
 
 
 /*
@@ -38,10 +40,12 @@ use App\Http\Controllers\HomeController;
     Route::get('/', [HomeController::class, 'index'])->name('home');
   //User
   Route::group(['middleware' => ['auth', 'verified']], function () {
-              Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
-    });
+    Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+  //Restaurant
+    Route::resource('restaurants', RestaurantController::class)->only(['index']);
 });
-
+});
+ 
 require __DIR__.'/auth.php';
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {

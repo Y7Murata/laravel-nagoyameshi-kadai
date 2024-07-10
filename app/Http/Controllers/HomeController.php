@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
   // -----
   // index アクション
-  // ------
+  // -----
 
    public function index() {
     $highly_rated_restaurants = Restaurant::take(6)->get();
