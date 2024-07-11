@@ -42,7 +42,7 @@ use App\Http\Controllers\RestaurantController;
   Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
   //Restaurant
-    Route::resource('restaurants', RestaurantController::class)->only(['index']);
+    Route::resource('restaurants', RestaurantController::class)->only(['index','show']);
 });
 });
  
