@@ -1,28 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+//①
 use App\Http\Controllers\Admin;
-//Userコントローラの宣言
-use App\Http\Controllers\UserController;
-
-//Restaurantコントローラの宣言
-/*use App\Http\Controllers\Admin\RestaurantController;*/
-
-//Categorieコントローラの宣言
-use App\Http\Controllers\Admin\CategoryController;
-
-//Companyコントローラの宣言
-use App\Http\Controllers\Admin\CompanyController;
-
-//Termコントローラの宣言
-use App\Http\Controllers\Admin\TermController;
-
-//Homeコントローラの宣言
 use App\Http\Controllers\HomeController;
-
-//Restaurantコントローラの宣言
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 
+//②
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Middleware\Subscribed;
+//②
+use App\Http\Middleware\NotSubscribed;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,15 +25,30 @@ use App\Http\Controllers\RestaurantController;
 |
 */
 
-  //Home
+    //Home
   Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-  //User
-  Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
-  //Restaurant
+
+    //Restaurant
     Route::resource('restaurants', RestaurantController::class)->only(['index','show']);
-});
+
+    //User
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+      Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+
+    
+      Route::group(['middleware' => [NotSubscribed::class]], function () {
+          Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+          Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+      });
+  
+      Route::group(['middleware' => [Subscribed::class]], function () {
+          Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
+          Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
+          Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+          Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+      });
+   });
 });
  
 require __DIR__.'/auth.php';
