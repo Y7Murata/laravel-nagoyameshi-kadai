@@ -14,6 +14,8 @@ use App\Http\Middleware\Subscribed;
 //②
 use App\Http\Middleware\NotSubscribed;
 
+use App\Http\Controllers\ReviewController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,20 +38,24 @@ use App\Http\Middleware\NotSubscribed;
     Route::group(['middleware' => ['auth', 'verified']], function () {
       Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
 
-    
+      Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+
+    //一般ユーザとしてログイン済かつメール認証済で有料プラン未登録の場合
       Route::group(['middleware' => [NotSubscribed::class]], function () {
           Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
           Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
       });
-  
+    //一般ユーザとしてログイン済かつメール認証済で有料プラン登録済の場合
       Route::group(['middleware' => [Subscribed::class]], function () {
           Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
           Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
           Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
           Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+      
+          Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+        });
       });
    });
-});
  
 require __DIR__.'/auth.php';
 
