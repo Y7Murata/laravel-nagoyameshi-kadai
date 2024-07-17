@@ -10,6 +10,11 @@ class Restaurant extends Model
 {
     use HasFactory, Sortable;
 
+    // 定義可能なカスタムソート
+    public $sortable = [
+        'rating', 'popular'
+    ];
+
     public function categories() {
        return $this->belongsToMany(Category::class)->withTimestamps();
     }
@@ -25,5 +30,13 @@ class Restaurant extends Model
     public function ratingSortable($query, $direction) {
         return $query->withAvg('reviews', 'score')->orderBy('reviews_avg_score', $direction);
     }
-    
+
+    public function reservations() {
+                return $this->hasMany(Reservation::class);
+    }
+
+    public function popularSortable($query, $direction) {
+                return $query->withCount('reservations')->orderBy('reservations_count', $direction);
+    }
+
 }
