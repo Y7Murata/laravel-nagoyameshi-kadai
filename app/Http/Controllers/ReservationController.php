@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Restaurant;
 
+use Carbon\Carbon;
+
 class ReservationController extends Controller
 {
     // -----
@@ -30,9 +32,14 @@ class ReservationController extends Controller
     // storeアクション
     // -----
         public function store(Request $request, Restaurant $restaurant) {
-                $request->validate([
-                    'reservation_date' => 'required|date_format:Y-m-d',
-                    'reservation_time' => 'required|date_format:H:i',
+            $today = date_format(now(),"Y-m-d H:i");
+            $input_datetime = $request->input('reservation_date') . ' ' . $request->input('reservation_time');
+            /*if($today>$input_datetime){
+                $request->validate(['reservation_date' => '現在時刻より前の予約はできません。']);
+            }*/   
+            $request->validate([
+                    'reservation_date' => 'required|date_format:Y-m-d|after_or_equal:today',
+                    'reservation_time' => 'required|date_format:H:i|after_or_equal:' . Carbon::now()->format('H:i'),
                     'number_of_people' => 'required|numeric|between:1,50',
                 ]);
         

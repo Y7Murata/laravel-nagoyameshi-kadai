@@ -18,6 +18,8 @@ use App\Http\Controllers\ReviewController;
 
 use App\Http\Controllers\ReservationController;
 
+use App\Http\Controllers\FavoriteController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +61,10 @@ use App\Http\Controllers\ReservationController;
           Route::resource('reservations', ReservationController::class)->only(['index', 'destroy']);
           Route::resource('restaurants.reservations', ReservationController::class)->only(['create', 'store']);
         
+          Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+          Route::post('favorites/{restaurant_id}', [FavoriteController::class, 'store'])->name('favorites.store');
+          Route::delete('favorites/{restaurant_id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+       
         });
       });
    });
