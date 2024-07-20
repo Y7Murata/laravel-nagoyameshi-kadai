@@ -2,16 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-//①
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 
-//②
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Middleware\Subscribed;
-//②
+
 use App\Http\Middleware\NotSubscribed;
 
 use App\Http\Controllers\ReviewController;
@@ -19,6 +17,10 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReservationController;
 
 use App\Http\Controllers\FavoriteController;
+
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TermController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +44,14 @@ use App\Http\Controllers\FavoriteController;
     Route::group(['middleware' => ['auth', 'verified']], function () {
       Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
 
-      Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+    //レビューページ
+    Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+
+    //会社概要ページ
+    Route::get('company', [CompanyController::class, 'index'])->name('company.index');
+    //利用規約ページ
+    Route::get('terms', [TermController::class, 'index'])->name('terms.index');
+
 
     //一般ユーザとしてログイン済かつメール認証済で有料プラン未登録の場合
       Route::group(['middleware' => [NotSubscribed::class]], function () {
