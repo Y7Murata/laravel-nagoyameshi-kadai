@@ -24,7 +24,7 @@ class TermTest extends TestCase
 
     use RefreshDatabase;
      
-    // ---
+     // ---
      //index
      // ---
      // 未ログインのユーザーは管理者側の利用規約ページにアクセスできない
